@@ -20,9 +20,8 @@
 <project name="quickstart" basedir="." default="generate.service">
 
     <property environment="env"/>
-    <!-- Remember, update the following to fit your filesystem --> 
-    <property name="AXIS2_HOME" value="C:\Users\Lorenzo\Documents\NetBeansProjects\axis2-1.6.2-bin\axis2-1.6.2"/>
-    <property name="AXIS2_HOME_TOMCAT" value="C:\Users\Lorenzo\AppData\Roaming\NetBeans\7.3.1\apache-tomcat-7.0.34.0_base\webapps\axis2"/>
+    <property name="AXIS2_HOME" value="/Users/Lorenzo/NetBeansProjects/my repository/axis2-1.6.2"/>
+    <property name="AXIS2_HOME_TOMCAT" value="/Users/Lorenzo/Library/Application Support/NetBeans/7.3/apache-tomcat-7.0.34.0_base/webapps/axis2"/>
 
     <property name="build.dir" value="build"/>
 
@@ -85,7 +84,7 @@
 
     <target name="remove.service">
         <!-- remove the service from axis2 standalone server -->
-        <delete file="${AXIS2_HOME}/repository/services/StockQuoteService.aar">  
+        <delete file="${AXIS2_HOME}/repository/services/StockQuoteService.aar">
         </delete>
 
         <!-- remove the service from axis2 web application deployed in tomcat -->
