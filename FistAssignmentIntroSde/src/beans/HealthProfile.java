@@ -1,10 +1,13 @@
 package beans;
-
+/**
+ *
+ * @author Lorenzo
+ */
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "healthprofile")
-@XmlType(propOrder = {"height", "weight"})
+@XmlType(propOrder = {"weight","height"})
 public class HealthProfile {
 
     private double weight; // in kilos

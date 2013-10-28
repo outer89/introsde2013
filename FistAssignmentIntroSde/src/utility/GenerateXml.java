@@ -54,7 +54,7 @@ public class GenerateXml {
             }
             Collections.shuffle(temp);
             people.setListaPersone(temp);
-            
+
             //write-marshall to file
             m.marshal(people, new File(path));
             res = true;
@@ -63,7 +63,21 @@ public class GenerateXml {
             return false;
         }
         return res;
-
     }
-    
+
+    public ArrayList<Person> casualPeople() {
+        ArrayList<Person> temp = new ArrayList<>();
+        //generate for each name and each surname a person with a random profile
+        for (String nome : nomi) {
+            for (String cognome : cognomi) {
+                Person person = new Person();
+                person.setFirstname(nome);
+                person.setLastname(cognome);
+                person.setHealthprofile(new HealthProfile());
+                temp.add(person);
+            }
+        }
+        Collections.shuffle(temp);
+        return temp;
+    }
 }

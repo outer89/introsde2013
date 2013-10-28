@@ -5,8 +5,6 @@
 package part1;
 
 import java.io.IOException;
-
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -99,6 +97,7 @@ public class Part1 {
      * @throws XPathExpressionException
      */
     public double getWeight() throws XPathExpressionException {
+        System.out.println("executing getWeight");
         XPathExpression expr;
         String expression = "";
         // xpath.compile("//bookstore/book/title/text() | //bookstore/book/author/text()");
@@ -124,13 +123,25 @@ public class Part1 {
             System.out.println("Not a number");
             return -1.0;
         }
-        System.out.println(res);
+        //System.out.println(res);
         return (Double) res;
 
     }
 
+    /**
+     * @see getWeight();
+     *
+     * @param p
+     * @return
+     * @throws XPathExpressionException
+     */
+    public double getWeight(Person p) throws XPathExpressionException {
+        this.p = p;
+        return getWeight();
+    }
+
     public void getHealthProfile(String nominativo) throws XPathExpressionException {
-        //FIXME
+        System.out.println("executing getHealtProfile");
         XPathExpression expr;
         String expression = "";
         if (nominativo != null) {
@@ -141,35 +152,31 @@ public class Part1 {
                         + " and lastname = \'" + surname + "\']" + "/healthprofile";
                 System.out.println(expression);
                 expr = xpath.compile(expression);
-                System.out.println(doc == null);
                 Object obj = expr.evaluate(doc, XPathConstants.NODE);
                 Node res = (Node) obj;
                 if (res == null) {
                     return;
-                }
-                if (res.equals(Double.NaN)) {
-                    return;
                 } else {
                     printHealthProfile(res);
                 }
-            } else {
-                return;
+
             }
-        } else {
-            return;
         }
     }
+        /**
+         * Use xpath to implement methods like getWeight and getHeight of a
+         * given person.
+         *
+         * @return height of given person, or name and surname or -1 if not
+         * found or invalid person
+         * @throws XPathExpressionException if can not compile expression or
+         * evaluate it
+         */
+    
 
-    /**
-     * Use xpath to implement methods like getWeight and getHeight of a given
-     * person.
-     *
-     * @return height of given person, or name and surname or -1 if not found or
-     * invalid person
-     * @throws XPathExpressionException if can not compile expression or
-     * evaluate it
-     */
     public double getHeight() throws XPathExpressionException {
+        System.out.println("executing getHeight");
+
         XPathExpression expr;
         String expression = "";
         // xpath.compile("//bookstore/book/title/text() | //bookstore/book/author/text()");
@@ -195,8 +202,13 @@ public class Part1 {
             System.out.println("Not a number");
             return -1.0;
         }
-        System.out.println(res);
+        //System.out.println(res);
         return (Double) res;
+    }
+
+    public double getHeight(Person p) throws XPathExpressionException {
+        this.p = p;
+        return getHeight();
     }
 
     /**
@@ -206,6 +218,7 @@ public class Part1 {
      * @throws XPathExpressionException
      */
     public void printWithParameters(Double weight, String relation) throws XPathExpressionException {
+        System.out.println("executing printWithParameters, relation is the following " + relation + weight);
         if (weight == null) {
             System.out.println("weight null");
             return;
@@ -276,7 +289,7 @@ public class Part1 {
 
             for (int i = 1; i < numberofpages; i++) {
                 printPage(i);
-                System.out.println("###############");
+                System.out.println("############### end of page " + i + " ###############");
             }
 
         }
@@ -353,11 +366,11 @@ public class Part1 {
         p.setLastname("North");
         Part1 p1 = new Part1(p);
         try {
-            // System.out.println(p1.getWeight());
-            // System.out.println(p1.getHeight());
-            p1.printAll();
-            //p1.getHealthProfile("Brittni North");
-            //p1.printWithParameters(80.0, ">");
+            System.out.println(p1.getWeight());
+            System.out.println(p1.getHeight());
+            //p1.printAll();
+            p1.getHealthProfile("Brittni North");
+            p1.printWithParameters(80.0, ">");
         } catch (Exception e) {
             System.err.println("errore");
             e.printStackTrace();
