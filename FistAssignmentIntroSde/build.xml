@@ -24,9 +24,9 @@
     
     <target name="archive" depends="compile">
         <echo>Starting to archive...</echo>
-        <jar destfile="${DistDir}/project.jar" basedir="build">
+        <jar destfile="${DistDir}/assignment1.jar" basedir="build">
             <manifest>
-                <attribute name="Main-Class" value="Part1"/>
+                <attribute name="Main-Class" value="main.Main"/>
                 <attribute name="Class-Path" value="build"/>
             </manifest>
         </jar>
@@ -34,7 +34,7 @@
     </target>
 
     <target name="execute" depends="compile">
-        <java classname="part1.Part1" classpath="build">
+        <java classname="main.Main" classpath="build">
         	<classpath>
                	<fileset dir="${lib}">
                 	  <include name="**/*.jar" />

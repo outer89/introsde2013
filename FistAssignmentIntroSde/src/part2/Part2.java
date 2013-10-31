@@ -55,6 +55,7 @@ public class Part2 {
     }
 
     public void leggi() throws JAXBException {
+        System.out.println("leggo e convalido l'xml con lo schema xsd");
         JAXBContext jaxbContext = JAXBContext.newInstance(People.class);
         Unmarshaller unMarshaller = jaxbContext.createUnmarshaller();
         SchemaFactory schemaFactory = SchemaFactory
@@ -71,8 +72,8 @@ public class Part2 {
         }
         unMarshaller.setSchema(schema);
         People p = (People) unMarshaller.unmarshal(new File(PERSON_XML_PATH));
-        System.out.println("name and surname of first 10 person");
-        for (int i = 0; i < 10 && i < p.getListaPersone().size(); i++) {
+        System.out.println("name and surname of first 5 person");
+        for (int i = 0; i < 5 && i < p.getListaPersone().size(); i++) {
             Person persona = p.getListaPersone().get(i);
             System.out.printf("person %d\n", i);
             System.out.printf("name %s\n", persona.getFirstname());

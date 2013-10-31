@@ -120,7 +120,7 @@ public class Part1 {
             return -1.0;
         }
         if (res.equals(Double.NaN)) {
-            System.out.println("Not a number");
+            //System.out.println("Not a number");
             return -1.0;
         }
         //System.out.println(res);
@@ -199,7 +199,7 @@ public class Part1 {
             return -1.0;
         }
         if (res.equals(Double.NaN)) {
-            System.out.println("Not a number");
+            //System.out.println("Not a number");
             return -1.0;
         }
         //System.out.println(res);
@@ -365,12 +365,14 @@ public class Part1 {
         p.setFirstname("Brittni");
         p.setLastname("North");
         Part1 p1 = new Part1(p);
+        Part1 p2 = new Part1("L", "G");
         try {
             System.out.println(p1.getWeight());
             System.out.println(p1.getHeight());
+            System.out.println(p2.getHeight());
             //p1.printAll();
-            p1.getHealthProfile("Brittni North");
-            p1.printWithParameters(80.0, ">");
+            //p1.getHealthProfile("Brittni North");
+            //p1.printWithParameters(80.0, ">");
         } catch (Exception e) {
             System.err.println("errore");
             e.printStackTrace();
