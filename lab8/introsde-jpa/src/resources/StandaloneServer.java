@@ -1,10 +1,15 @@
-package introsde.crud.rest.resources;
+package resources;
 
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.ws.rs.Path;
+
+import org.eclipse.persistence.config.PersistenceUnitProperties;
 
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 
