@@ -9,6 +9,7 @@ package model;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -26,6 +27,7 @@ public class Measure{
     private MeasureType type;
     private String mid;
     private String value;
+    @XmlElement(name = "created")
     private Date date;
 
     /**
@@ -68,6 +70,20 @@ public class Measure{
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * @return the type
+     */
+    public MeasureType getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(MeasureType type) {
+        this.type = type;
     }
     
 }

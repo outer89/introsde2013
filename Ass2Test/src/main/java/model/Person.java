@@ -3,6 +3,7 @@
 // If a class is in another package, in other to see it, you need to import it
 package model;
 
+import java.util.LinkedList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -25,24 +26,28 @@ public class Person {
         this.setId(id);
         this.setFirstname(fname);
         this.setLastname(lname);
+        listaMisure = new LinkedList<Measure>();
     }
 
     public Person(String fname, String lname, HealthProfile hp) {
         this.setFirstname(fname);
         this.setLastname(lname);
         this.hProfile = hp;
+        listaMisure = new LinkedList<Measure>();
     }
 
     public Person(String fname, String lname) {
         this.setFirstname(fname);
         this.setLastname(lname);
         this.hProfile = new HealthProfile();
+        listaMisure = new LinkedList<Measure>();
     }
 
     public Person() {
         this.firstname = "Pinco";
         this.lastname = "Pallino";
         this.hProfile = new HealthProfile();
+        listaMisure = new LinkedList<Measure>();
     }
 
     public String getFirstname() {

@@ -9,6 +9,11 @@ import dao.PersonDao;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
@@ -26,7 +31,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBElement;
 import model.Measure;
+import model.MeasureList;
 import model.MeasureType;
+import model.People;
 import model.Person;
 
 /**
@@ -41,6 +48,29 @@ public class PersonService {
     @Context
     Request request;
 
+    
+    @GET
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response getPeople(){
+        Response res = null;
+        Set<Entry<String, Person>> set = PersonDao.instance.getModel().entrySet();
+        List<String> l = new LinkedList<String>();
+        if(set.isEmpty()){
+            res = Response.noContent().build();
+        }else{
+            for (Map.Entry<String, Person> en : set) {
+                Person p = en.getValue();
+                String nominativo = p.getFirstname() + " " + p.getLastname();
+                l.add(nominativo);
+            }
+            People p = new People();
+            p.setLista(l);
+            res = Response.ok(p).build();
+        }
+        return res;
+    }
+    
+    
     /**
      * Following the crud operation on Person
      *
@@ -130,11 +160,94 @@ public class PersonService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 
     public Response newMeasure(@PathParam("id") String id, @PathParam("measuretype") String measuretype, JAXBElement<Measure> measure) {
-        Response res = Response.status(200).build();
-        System.out.println(id);
-        System.out.println(MeasureType.contains(measuretype));
+        Response res = null;
         Measure m = measure.getValue();
-        System.out.println(m.getMid());
+        Person p = PersonDao.instance.getModel().get(id);
+        if (p == null) {
+            res = Response.status(Response.Status.CONFLICT).build();
+        } else if (containsMID(p, id)) {
+            res = Response.status(Response.Status.CONFLICT).build();
+        } else {
+            m.setType(MeasureType.getType(measuretype));
+            p.getListaMisure().add(m);
+            URL url;
+            try {
+                url = new URL(uriInfo.getAbsolutePath() + "/" + m.getMid());
+                res = Response.created(url.toURI()).entity(m).build();
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(PersonService.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(PersonService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return res;
     }
+
+    private boolean containsMID(Person p, String id) {
+        for (Measure m1 : p.getListaMisure()) {
+            if (m1.getMid().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //http://localhost:8084/Ass2Test/rest/Person/1/HEIGHT/1001
+    @GET
+    @Path("{id}/{measuretype}/{mid}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response getMeasure(@PathParam("id") String id,
+            @PathParam("measuretype") String measuretype,
+            @PathParam("mid") String mid) {
+        Response res = null;
+        Person p = PersonDao.instance.getModel().get(id);
+        if (p == null) {
+            res = Response.status(Response.Status.CONFLICT).build();
+        } else {
+            Measure m = getMeasure(mid, p);
+            if (m == null) {
+                res = Response.status(Response.Status.CONFLICT).build();
+            } else {
+                res = Response.status(Response.Status.OK).entity(m).build();
+            }
+        }
+        return res;
+    }
+
+    private Measure getMeasure(String mid, Person p) {
+        for (Measure measure : p.getListaMisure()) {
+            if (measure.getMid().equals(mid)) {
+                return measure;
+            }
+        }
+        return null;
+    }
+
+    @GET
+    @Path("{id}/{measure}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Response getHistory(@PathParam("id") String id, @PathParam("measure") String measure) {
+        Response res = null;
+        Person p = PersonDao.instance.getModel().get(id);
+        if (p == null) {
+            res = Response.status(Response.Status.CONFLICT).build();
+        } else {
+            List<Measure> history = new LinkedList<Measure>();
+            MeasureType m = MeasureType.getType(measure);
+            for (Measure misura : p.getListaMisure()) {
+                if (misura.getType().equals(m)) {
+                    history.add(misura);
+                }
+            }
+            if (history.isEmpty()) {
+                res = Response.noContent().build();
+            } else {
+                MeasureList ml = new MeasureList();
+                ml.setLista(history);
+                res = Response.ok(ml).build();
+            }
+        }
+        return res;
+    }
+
 }
