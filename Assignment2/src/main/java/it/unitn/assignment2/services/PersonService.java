@@ -92,10 +92,19 @@ public class PersonService {
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response newPerson(JAXBElement<Person> person) {
+        /**
+         * control if there is a person.id
+         * if there is not, get a new one and insert resource
+         * else 
+         * control if the p.id is already present in the model
+         *  if is present return a conflict, with the actual state of resources the request can not be fulfilled
+         *  else insert in the model
+         * 
+         */
         System.out.println("POST");
         Person c = person.getValue();
         System.out.println(c.getId());
-        if (c.getId() == null) {
+        if (c.getId() == null || c.getId().equals("")) {
             //devo assegnargli un id
             c.setId(PersonDao.instance.getNewID());
         }
@@ -136,10 +145,21 @@ public class PersonService {
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response putPerson(JAXBElement<Person> person, @PathParam("id") String id) {
+        /**
+         * makes the update of a person
+         * i get and xml or json and i preocede in checking if the following are respected:
+         * i will not update the resource if the person.id is different from id
+         * if person.id is null and id is present in the database I return a conflict
+         * if person.id is null and id is NOT present in the database I add the person to the database
+         * 
+         * if the person.id is present I check that p.id and id are equal before updating the resource 
+         * because I don't want to update them if they have different id
+         * 
+         */
         Response res = null;
         Person p = person.getValue();
-        if (p.getId() != null) {
-            //se hai l'id
+        if (p.getId() != null && !p.getId().equals("")) {
+            System.out.println("entity has id");
             if (p.getId().toString().equals(id)) {
                 if (PersonDao.instance.getModel().containsKey(id)) {
                     //fai l'update
@@ -150,7 +170,7 @@ public class PersonService {
                     res = Response.created(uriInfo.getAbsolutePath()).entity(p).build();
                 }
                 System.out.println("executing update");
-                Person r = PersonDao.instance.getModel().put(id, p);
+                PersonDao.instance.getModel().put(id, p);
             } else {
                 //se gli id sono diversi
                 //per una politica di indicizzazione delle risorse ho deciso di dare conflict se gli id sono diversi

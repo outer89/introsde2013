@@ -3,31 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package it.unitn.assignment2.model;
 
+import it.unitn.assignment2.utils.DateAdapter;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Lorenzo
  */
-
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Measure{
-    
+public class Measure {
+
     @XmlTransient
     private MeasureType type;
     private String mid;
     private String value;
     @XmlElement(name = "created")
+    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date date;
 
     /**
@@ -85,5 +85,5 @@ public class Measure{
     public void setType(MeasureType type) {
         this.type = type;
     }
-    
+
 }

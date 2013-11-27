@@ -31,35 +31,12 @@ public class Person {
     @XmlTransient
     private List<Measure> listaMisure;
 
-    public Person(String id, String fname, String lname) {
-        this.setId(id);
-        this.setFirstname(fname);
-        this.setLastname(lname);
-        listaMisure = new LinkedList<Measure>();
-    }
-
-    public Person(String fname, String lname, HealthProfile hp) {
-        this.setFirstname(fname);
-        this.setLastname(lname);
-        this.hProfile = hp;
-        listaMisure = new LinkedList<Measure>();
-    }
-
-    public Person(String fname, String lname) {
-        this.setFirstname(fname);
-        this.setLastname(lname);
-        this.hProfile = new HealthProfile();
-        listaMisure = new LinkedList<Measure>();
-    }
-
     public Person() {
         this.firstname = "Lorenzo";
         this.lastname = "Gramola";
         this.hProfile = new HealthProfile();
         listaMisure = new LinkedList<Measure>();    
-        Calendar c = Calendar.getInstance();
-        c.set(1989, 07, 11);
-        this.setBday(c.getTime());
+        this.setBday(new Date());
     }
 
     public String getFirstname() {
