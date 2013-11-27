@@ -136,6 +136,7 @@ public class PersonService {
             PersonDao.instance.getModel().remove(id);
             res = Response.status(Response.Status.OK).entity(p).build();
         } else {
+            //compliant to rfc
             res = Response.status(Response.Status.CONFLICT).build();
         }
         return res;
