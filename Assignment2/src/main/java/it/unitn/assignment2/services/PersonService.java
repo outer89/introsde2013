@@ -15,7 +15,10 @@ import it.unitn.assignment2.utils.MeasureListComparator;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
@@ -93,13 +97,11 @@ public class PersonService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response newPerson(JAXBElement<Person> person) {
         /**
-         * control if there is a person.id
-         * if there is not, get a new one and insert resource
-         * else 
-         * control if the p.id is already present in the model
-         *  if is present return a conflict, with the actual state of resources the request can not be fulfilled
-         *  else insert in the model
-         * 
+         * control if there is a person.id if there is not, get a new one and
+         * insert resource else control if the p.id is already present in the
+         * model if is present return a conflict, with the actual state of
+         * resources the request can not be fulfilled else insert in the model
+         *
          */
         System.out.println("POST");
         Person c = person.getValue();
@@ -147,15 +149,17 @@ public class PersonService {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response putPerson(JAXBElement<Person> person, @PathParam("id") String id) {
         /**
-         * makes the update of a person
-         * i get and xml or json and i preocede in checking if the following are respected:
-         * i will not update the resource if the person.id is different from id
-         * if person.id is null and id is present in the database I return a conflict
-         * if person.id is null and id is NOT present in the database I add the person to the database
-         * 
-         * if the person.id is present I check that p.id and id are equal before updating the resource 
-         * because I don't want to update them if they have different id
-         * 
+         * makes the update of a person i get and xml or json and i preocede in
+         * checking if the following are respected: i will not update the
+         * resource if the person.id is different from id if person.id is null
+         * and id is present in the database I return a conflict if person.id is
+         * null and id is NOT present in the database I add the person to the
+         * database
+         *
+         * if the person.id is present I check that p.id and id are equal before
+         * updating the resource because I don't want to update them if they
+         * have different id
+         *
          */
         Response res = null;
         Person p = person.getValue();
@@ -206,7 +210,6 @@ public class PersonService {
     @POST
     @Path("{id}/{measuretype}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-
     public Response newMeasure(@PathParam("id") String id, @PathParam("measuretype") String measuretype, JAXBElement<Measure> measure) {
         Response res = null;
         Measure m = measure.getValue();
@@ -240,8 +243,6 @@ public class PersonService {
         return false;
     }
 
-    
-    //FIXME
     @GET
     @Path("{id}/{measuretype}/{mid}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -278,32 +279,71 @@ public class PersonService {
         return null;
     }
 
-    @GET
-    @Path("{id}/{measure}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response getMeasureList(@PathParam("id") String id, @PathParam("measure") String measure) {
-        Response res = null;
-        Person p = PersonDao.instance.getModel().get(id);
-        if (p == null) {
-            res = Response.status(Response.Status.CONFLICT).build();
-        } else {
-            List<Measure> history = new LinkedList<Measure>();
-            MeasureType m = MeasureType.getType(measure);
-            for (Measure misura : p.getListaMisure()) {
-                if (misura.getType().equals(m)) {
-                    history.add(misura);
-                }
-            }
-            if (history.isEmpty()) {
-                res = Response.noContent().build();
-            } else {
-                MeasureList ml = new MeasureList();
-                Collections.sort(history, new MeasureListComparator());
-                ml.setLista(history);
-                res = Response.ok(ml).build();
-            }
+    private Date transformDate(String date) {
+        Date res = null;
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MMM-dd");
+            res = formatter.parse(date);
+        } catch (Exception e) {
+            res = null;
         }
         return res;
+
     }
+
+    //FIXME
+    //GET /person/{id}/{measure}?before={beforeDate}&after={afterDate}
+    //GET /person/{id}/{measure}
+//    @GET
+//    @Path("{id}/{measure}")
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    public Response getMeasureList(@PathParam("id") String id,
+//            @PathParam("measure") String measure,
+//            @QueryParam("after") String from,
+//            @QueryParam("before") String to) {
+//
+//        Response res = null;
+//        Person p = PersonDao.instance.getModel().get(id);
+//        if (p == null) {
+//            res = Response.status(Response.Status.CONFLICT).build();
+//        } else {
+//            List<Measure> history = new LinkedList<Measure>();
+//            MeasureType m = MeasureType.getType(measure);
+//            Boolean dummydate = false;
+//            Date fromdate = null;
+//            Date todate = null;
+//            if (from != null && to != null) {
+//                if (from.equals("")) {
+//                    dummydate = true;
+//                }
+//                if (to.equals("")) {
+//                    dummydate = true;
+//                } else {
+//                    //try to convert dates
+//
+//                }
+//            }
+//            for (Measure misura : p.getListaMisure()) {
+//                if (misura.getType().equals(m)) {
+//
+//                    if (misura.getDate().after(fromdate) && misura.getDate().before(todate)) {
+//                        history.add(misura);
+//                    }
+//                } else {
+//                    history.add(misura);
+//                }
+//            }
+//        }
+//        if (history.isEmpty()) {
+//            res = Response.noContent().build();
+//        } else {
+//            MeasureList ml = new MeasureList();
+//            Collections.sort(history, new MeasureListComparator());
+//            ml.setLista(history);
+//            res = Response.ok(ml).build();
+//        }
+//    }
+//    return res ;
+//}
 
 }

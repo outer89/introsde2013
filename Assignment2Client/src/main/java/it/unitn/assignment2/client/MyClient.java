@@ -29,7 +29,7 @@ public class MyClient {
     public MyClient() {
         final Client client = ClientBuilder.newClient();
         target = client.target(getUrl());
-        //to be tested VIVA
+          //to be tested VIVA
 //        getPerson("5", MediaType.APPLICATION_XML);
 //        getPerson("5", MediaType.APPLICATION_JSON);
 //        getMeasures();
@@ -39,13 +39,13 @@ public class MyClient {
 //        getPersonMeasure("1", MeasureType.HEIGHT.toString(), "1", MediaType.APPLICATION_JSON);
 //        getMeasureHistory("1", MeasureType.WEIGHT.toString(), MediaType.APPLICATION_XML);
 //        getMeasureHistory("1", MeasureType.WEIGHT.toString(), MediaType.APPLICATION_JSON);
-        //deletePerson("5");
-        putPerson("1005");
-        //to be tested on my own services provider
+//        deletePerson("5");
+//        putPerson("1005");
+          //to be tested on my own services provider
 //        postPerson("");
 
     }
-
+        
     public void putPerson(String id) {
         System.out.println("PUT PERSON");
         Person p = new Person();

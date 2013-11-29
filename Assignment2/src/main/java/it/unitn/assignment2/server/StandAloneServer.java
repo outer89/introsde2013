@@ -28,7 +28,8 @@ public class StandAloneServer {
 
     public StandAloneServer() {
         try {
-            String localhost = InetAddress.getLocalHost().getHostAddress();
+            String localhost = //InetAddress.getLocalHost().getHostAddress();
+                    InetAddress.getLoopbackAddress().getHostAddress();
             System.out.println(InetAddress.getLocalHost().getHostAddress());
             String port = "5901";
             String url = "http://" + localhost + ":" + port + "/";
