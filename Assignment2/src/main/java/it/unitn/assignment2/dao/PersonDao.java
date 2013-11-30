@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public enum PersonDao {
+
     instance;
     private Map<String, Person> contentProvider = new HashMap<String, Person>();
     private final String[] nomi = {"Brittni", "Cassie", "Dwight", "Shana", "Emma",
@@ -112,6 +113,20 @@ public enum PersonDao {
             }
         }
         res += 1;
+        return res.toString();
+    }
+
+    public String getNewMID(Person p, MeasureType m) {
+        Integer res = 0;
+        for (Measure measure : p.getListaMisure()) {
+            if (measure.getType().equals(m)) {
+                Integer i = new Integer(measure.getMid());
+                if (i > res) {
+                    res = i;
+                }
+            }
+        }
+        res+=1;
         return res.toString();
     }
 }

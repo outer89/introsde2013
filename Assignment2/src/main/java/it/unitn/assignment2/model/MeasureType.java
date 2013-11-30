@@ -23,8 +23,12 @@ public enum MeasureType {
         }
         return false;
     }
-    public static MeasureType getType(String measure){
-    for (MeasureType measureType : MeasureType.values()) {
+
+    public static MeasureType getType(String measure) {
+        if (measure == null) {
+            return null;
+        }
+        for (MeasureType measureType : MeasureType.values()) {
             if (measureType.toString().toLowerCase().equals(measure.toLowerCase())) {
                 return measureType;
             }
