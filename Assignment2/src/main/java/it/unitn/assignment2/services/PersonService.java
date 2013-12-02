@@ -120,8 +120,6 @@ public class PersonService {
     }
 
     private boolean chekcSingle(Double value, Double max, Double min, boolean getmin, boolean getmax) {
-        System.out.println("sigle check");
-        System.out.println(getmin + " " + getmax);
         if (getmin && getmax) {
 
             if (value.compareTo(max) <= 0 && value.compareTo(min) >= 0) {
@@ -174,7 +172,6 @@ public class PersonService {
          *
          */
         Person c = person.getValue();
-        System.out.println(c.getId());
         if (c.getId() == null || c.getId().equals("")) {
             //devo assegnargli un id
             c.setId(PersonDao.instance.getNewID());
@@ -233,32 +230,25 @@ public class PersonService {
         Response res = null;
         Person p = person.getValue();
         if (p.getId() != null && !p.getId().equals("")) {
-            System.out.println("entity has id");
             if (p.getId().toString().equals(id)) {
                 if (PersonDao.instance.getModel().containsKey(id)) {
                     //fai l'update
-                    System.out.println("faccio l'update");
                     res = Response.noContent().build();
                 } else {
-                    System.out.println("faccio una insert");
                     res = Response.created(uriInfo.getAbsolutePath()).entity(p).build();
                 }
-                System.out.println("executing update");
                 PersonDao.instance.getModel().put(id, p);
             } else {
                 //se gli id sono diversi
                 //per una politica di indicizzazione delle risorse ho deciso di dare conflict se gli id sono diversi
-                System.out.println("gli id sono diversi");
                 res = Response.status(Response.Status.CONFLICT).build();
             }
         } else {
             // se non c'è l'id lo assegno uguale a quello di cui sta facendo l'update, sempre che non sia già usato
             if (PersonDao.instance.getModel().containsKey(id)) {
                 //conflict = voglio l'id but it is missing i reject the update
-                System.out.println("conflitto");
                 res = Response.status(Response.Status.CONFLICT).build();
             } else {
-                System.out.println("faccio una nuova insert con l'id usato per il path");
                 p.setId(id);
                 PersonDao.instance.getModel().put(id, p);
                 res = Response.created(uriInfo.getAbsolutePath()).entity(p).build();
@@ -314,7 +304,6 @@ public class PersonService {
         Response res = null;
         //<editor-fold defaultstate="collapsed" desc="should never be reached">
         if (id == null || measure == null || mid == null) {
-            System.out.println("first check for null");
             //request should not be performed in the same way
             //this in theory should never be reached
             res = Response.status(Response.Status.BAD_REQUEST).build();
@@ -323,7 +312,6 @@ public class PersonService {
 //</editor-fold>
         Person p = PersonDao.instance.getModel().get(id);
         if (p == null) {
-            System.out.println("person is null");
             //in conflict, there exist no such person
             res = Response.status(Response.Status.CONFLICT).build();
             return res;
@@ -331,7 +319,6 @@ public class PersonService {
             //if the person exists
             MeasureType m = MeasureType.getType(measure);
             if (m == null) {
-                System.out.println("measure passed does not exist");
                 res = Response.status(Response.Status.CONFLICT).build();
                 return res;
             }
@@ -341,7 +328,6 @@ public class PersonService {
             if (a == null) {
                 //should never be reache
                 //jaxb+jersey tells: no entity
-                System.out.println("a is equal to null");
                 res = Response.status(Response.Status.CONFLICT).build();
                 return res;
             }
@@ -350,7 +336,6 @@ public class PersonService {
             //serach measure inside the person measure list
             Measure misura = getMeasure(mid, p, measure);
             if (misura == null) {
-                System.out.println("misure ottenuta is null");
                 //this means that the resource is empty at that URL so I can do a post here
                 //maintain consistency, change a.getmid to the mid indicated and save it 
                 a.setMid(mid);
@@ -366,7 +351,6 @@ public class PersonService {
                 a.setMid(misura.getMid());
             }
             if (a.getMid().equals(misura.getMid())) {
-                System.out.println("modifico");
                 p.getListaMisure().remove(misura);
                 p.getListaMisure().add(a);
                 res = Response.status(Response.Status.NO_CONTENT).build();
@@ -374,7 +358,6 @@ public class PersonService {
             } else {
                 //id are different, this is not allowed
                 //i want to keep consistency
-                System.out.println("i will not do anything");
                 res = Response.status(Response.Status.CONFLICT).build();
                 return res;
             }
@@ -399,16 +382,12 @@ public class PersonService {
         Response res = null;
         Person p = PersonDao.instance.getModel().get(id);
         if (p == null) {
-            System.out.println("there is not such person");
             res = Response.status(Response.Status.NO_CONTENT).build();
         } else {
-            System.out.println("looking for the measure");
             Measure m = getMeasure(mid, p, measuretype);
             if (m == null) {
-                System.out.println("there is not such measure");
                 res = Response.status(Response.Status.NO_CONTENT).build();
             } else {
-                System.out.println("ok returning measure");
                 res = Response.status(Response.Status.OK).entity(m).build();
             }
         }

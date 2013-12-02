@@ -19,7 +19,7 @@
   <target name="help">
     <echo message="Please run: $ant -projecthelp"/>
   </target>
-  <target name="exec" 
+  <target name="execute-client" 
       depends="compile">
     <echo message="Executing client"/>
     <java classname="it.unitn.assignment2.client.MyClient" classpath="${maven.build.outputDir}" classpathref="build.classpath">
