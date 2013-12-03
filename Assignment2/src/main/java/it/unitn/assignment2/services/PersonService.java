@@ -52,7 +52,6 @@ public class PersonService {
     UriInfo uriInfo;
     @Context
     Request request;
-
     //GET /person?measure={measure}&max={max}&min={min} retrieves people whose {measure} value is in the [{min},{max}] range (if only one for the query params is provided, use only that)
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -75,7 +74,6 @@ public class PersonService {
         }
         return res;
     }
-
     private List<String> getListaPersoneQuery(String measure, Double max, Double min) {
         List<String> res = null;
         MeasureType m = MeasureType.getType(measure);
