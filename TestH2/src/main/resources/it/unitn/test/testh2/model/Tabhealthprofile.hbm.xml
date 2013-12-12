@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 10-dic-2013 16.58.09 by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="it.unitn.test.testh2.model.Tabhealthprofile" table="TABHEALTHPROFILE" catalog="TEST">
+        <id name="idtabhealthprofile" type="java.lang.Integer">
+            <column name="IDTABHEALTHPROFILE" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tabperson" class="it.unitn.test.testh2.model.Tabperson" fetch="select">
+            <column name="IDPERSON" not-null="true" />
+        </many-to-one>
+        <property name="date" type="timestamp">
+            <column name="DATE" length="23" not-null="true" />
+        </property>
+        <property name="weight" type="double">
+            <column name="WEIGHT" precision="17" scale="0" not-null="true" />
+        </property>
+        <property name="height" type="double">
+            <column name="HEIGHT" precision="17" scale="0" not-null="true">
+                <comment>\n</comment>
+            </column>
+        </property>
+        <property name="steps" type="int">
+            <column name="STEPS" not-null="true" />
+        </property>
+        <property name="calories" type="int">
+            <column name="CALORIES" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 10-dic-2013 16.58.09 by Hibernate Tools 3.6.0 -->
+<hibernate-mapping>
+    <class name="it.unitn.test.testh2.model.Tabperson" table="TABPERSON" catalog="TEST">
+        <id name="idperson" type="java.lang.Integer">
+            <column name="IDPERSON" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="45" not-null="true" />
+        </property>
+        <property name="surname" type="string">
+            <column name="SURNAME" length="45" not-null="true" />
+        </property>
+        <property name="birthday" type="timestamp">
+            <column name="BIRTHDAY" length="23" not-null="true" />
+        </property>
+        <set name="tabhealthprofiles" table="TABHEALTHPROFILE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="IDPERSON" not-null="true" />
+            </key>
+            <one-to-many class="it.unitn.test.testh2.model.Tabhealthprofile" />
+        </set>
+    </class>
+</hibernate-mapping>
