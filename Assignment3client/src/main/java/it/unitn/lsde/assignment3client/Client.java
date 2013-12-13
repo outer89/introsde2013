@@ -36,15 +36,15 @@ public class Client implements ServiceTest {
 
     public static void main(String[] args) {
         Client c = new Client();
-       /* int i = c.createPerson();
+        int i = c.createPerson();
         c.readPerson(1);
         if (i > 0) {
             c.deletePerson(i);
         }
         c.updatePerson();
-        c.getHistory();*/
+        c.getHistory();
         c.updateHealthprofile();
-      //  c.addHealthprofile();
+        c.addHealthprofile();
     }
     
 

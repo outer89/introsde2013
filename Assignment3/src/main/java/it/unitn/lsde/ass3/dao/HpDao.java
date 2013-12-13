@@ -33,7 +33,7 @@ public class HpDao extends DaoBase {
             tx = s.beginTransaction();
             if (hp.getIdtabhealthprofile() == null) {
                 save = true;
-            } else if (s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult() != null) {
+            } else if ( gethp(hp.getIdtabhealthprofile()) != null) {
                 //there exist already an HP with this profile
                 //return -1;
             } else {
@@ -56,8 +56,27 @@ public class HpDao extends DaoBase {
             tx.rollback();
             e.printStackTrace();
             return -3;
-        }finally {s.close();}
+        } finally {
+            s.close();
+        }
 
+    }
+
+    private Healthprofile gethp(int id) {
+        Session s = getSession();
+        Transaction tx = null;
+        try {
+            tx = s.beginTransaction();
+            Criteria c = s.createCriteria(Healthprofile.class).add(Restrictions.idEq(id));
+            Healthprofile hp = (Healthprofile) c.uniqueResult();
+            s.flush();
+            tx.commit();
+            return hp;
+        } catch (Exception e) {
+            return null;
+        } finally {
+            s.close();
+        }
     }
 
     /**
@@ -75,11 +94,11 @@ public class HpDao extends DaoBase {
             if (p == null) {
                 return -2;
             }
-            hp.setTabperson(p);
-            if ((s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult() == null)) {
+            if ( gethp(hp.getIdtabhealthprofile()) == null) {
                 System.out.println("cazziemazzi");
                 hp.setIdtabhealthprofile(null);
             }
+            hp.setTabperson(p);
             s.saveOrUpdate(hp);
             s.flush();
             tx.commit();
