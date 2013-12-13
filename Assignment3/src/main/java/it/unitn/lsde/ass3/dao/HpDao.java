@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package it.unitn.lsde.ass3.dao;
 
 import it.unitn.lsde.ass3.assignment3.model.Healthprofile;
@@ -18,26 +17,68 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author Lorenzo
  */
-public class HpDao extends DaoBase{
-    
+public class HpDao extends DaoBase {
+
     /**
-     * 
+     *
+     * @param id
+     * @param hp
+     * @return id of hp else -1
+     */
+    public int addHp(int id, Healthprofile hp) {
+        Session s = getSession();
+        Transaction tx = null;
+        boolean save = false;
+        try {
+            tx = s.beginTransaction();
+            if (hp.getIdtabhealthprofile() == null) {
+                save = true;
+            } else if (s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult() != null) {
+                //there exist already an HP with this profile
+                //return -1;
+            } else {
+                save = true;
+            }
+            if (save == true) {
+                Person p = new PersonDao().getPersonNofilter(id);
+                if (p == null) {
+                    return -2;
+                }
+                hp.setTabperson(p);
+                s.save(hp);
+                s.flush();
+                tx.commit();
+                return hp.getIdtabhealthprofile();
+            } else {
+                return -1;
+            }
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+            return -3;
+        }
+
+    }
+
+    /**
+     *
      * @param id
      * @param hp
      * @return id of hp or -1 in case of error, -2 if person does not exist
      */
-    public int updateHp(int id, Healthprofile hp){
+    public int updateHp(int id, Healthprofile hp) {
         Session s = getSession();
         Transaction tx = null;
         try {
-            tx= s.beginTransaction();
+            tx = s.beginTransaction();
             Person p = new PersonDao().getPersonNofilter(id);
-            if(p == null){
+            if (p == null) {
                 return -2;
             }
             hp.setTabperson(p);
-            if((s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult()==null))
+            if ((s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult() == null)) {
                 hp.setIdtabhealthprofile(null);
+            }
             s.saveOrUpdate(hp);
             s.flush();
             tx.commit();
@@ -46,18 +87,17 @@ public class HpDao extends DaoBase{
             e.printStackTrace();
             tx.rollback();
             return -1;
-        }
-        finally{
+        } finally {
             s.close();
         }
-    
+
     }
-    
-    public List getHistory(int idPerson){
+
+    public List getHistory(int idPerson) {
         Session s = getSession();
         Transaction tx = null;
         try {
-            tx= s.beginTransaction();
+            tx = s.beginTransaction();
             Criteria c = s.createCriteria(Healthprofile.class);
             Person p = new Person();
             p.setIdperson(idPerson);
@@ -67,10 +107,9 @@ public class HpDao extends DaoBase{
             e.printStackTrace();
             tx.rollback();
             return null;
-        }
-        finally{
+        } finally {
             s.close();
         }
-        
+
     }
 }

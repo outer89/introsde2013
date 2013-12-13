@@ -39,8 +39,12 @@ public interface Ass3Services {
     public int deletePerson(@WebParam(name = "personId") int id) throws Exception;
 
     @WebMethod(operationName = "updatePersonHealthProfile")
-    @WebResult(name = "hpId")              
+    @WebResult(name = "hpId")
     public int updatePersonHP(@WebParam(name = "personId") int id, @WebParam(name = "healthProfile") Healthprofile hp) throws Exception;
+
+    @WebMethod(operationName = "addPersonHealthProfile")
+    @WebResult(name = "hpId")
+    public int addPersonHP(@WebParam(name = "personId") int id, @WebParam(name = "healthProfile") Healthprofile hp) throws Exception;
 
     @WebMethod(operationName = "getHistory")
     @WebResult(name = "history")

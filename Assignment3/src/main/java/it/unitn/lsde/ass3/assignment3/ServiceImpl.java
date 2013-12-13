@@ -65,4 +65,9 @@ public class ServiceImpl implements Ass3Services {
         }
     }
 
+    public int addPersonHP(int id, Healthprofile hp) throws Exception {
+         HpDao hpd = new HpDao();
+         return hpd.addHp(id, hp);
+    }
+
 }
