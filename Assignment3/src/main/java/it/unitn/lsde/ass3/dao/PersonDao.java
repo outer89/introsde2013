@@ -20,14 +20,19 @@ public class PersonDao extends DaoBase {
 
     public Person getPerson(int id) {
         Person res = null;
+        Session s = getSession();
+        Transaction tx = null;
         try {
-            Session s = getSession();
+
+            tx = s.beginTransaction();
             s.enableFilter("ultimadata");
             Criteria c = s.createCriteria(Person.class);
             c.add(Restrictions.idEq(id));
             res = (Person) c.uniqueResult();
             s.close();
+            tx.commit();
         } catch (Exception e) {
+            tx.rollback();
             e.printStackTrace();
             res = null;
         } finally {
@@ -45,12 +50,10 @@ public class PersonDao extends DaoBase {
         Transaction tx = null;
         //serve per non fare sgorillare l'update, poiche manca l'id della person
         if (p.getTabhealthprofiles() != null) {
-            if (p.getTabhealthprofiles().size() == 1) {
-                Healthprofile hp = (Healthprofile) p.getTabhealthprofiles().toArray()[0];
+            Healthprofile hp;
+            for (Object object : p.getTabhealthprofiles()) {
+                hp = (Healthprofile) object;
                 hp.setTabperson(p);
-                p.getTabhealthprofiles().clear();
-                p.getTabhealthprofiles().add(hp);
-
             }
         }
         try {
@@ -131,13 +134,17 @@ public class PersonDao extends DaoBase {
 
     protected Person getPersonNofilter(int id) {
         Person res = null;
+        Session s = getSession();
+        Transaction tx = null;
         try {
-            Session s = getSession();
+            tx = s.beginTransaction();
             Criteria c = s.createCriteria(Person.class);
             c.add(Restrictions.idEq(id));
             res = (Person) c.uniqueResult();
             s.close();
+            tx.commit();
         } catch (Exception e) {
+            tx.rollback();
             e.printStackTrace();
             res = null;
         } finally {

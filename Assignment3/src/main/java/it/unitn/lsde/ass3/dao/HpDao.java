@@ -56,7 +56,7 @@ public class HpDao extends DaoBase {
             tx.rollback();
             e.printStackTrace();
             return -3;
-        }
+        }finally {s.close();}
 
     }
 
@@ -77,6 +77,7 @@ public class HpDao extends DaoBase {
             }
             hp.setTabperson(p);
             if ((s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult() == null)) {
+                System.out.println("cazziemazzi");
                 hp.setIdtabhealthprofile(null);
             }
             s.saveOrUpdate(hp);
