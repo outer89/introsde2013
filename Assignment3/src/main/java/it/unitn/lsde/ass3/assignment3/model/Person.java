@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -16,10 +16,7 @@ public class Person implements java.io.Serializable {
     private String name;
     private String surname;
     private Date birthday;
-
-    private Healthprofile healthprofile;
-
-    @XmlTransient
+    @XmlElement(name = "healthprofile")
     private Set<Healthprofile> tabhealthprofiles = new HashSet<Healthprofile>(0);
 
     public Person() {
@@ -79,20 +76,4 @@ public class Person implements java.io.Serializable {
     public void setTabhealthprofiles(Set<Healthprofile> tabhealthprofiles) {
         this.tabhealthprofiles = tabhealthprofiles;
     }
-
-    /**
-     * @return the healthprofile
-     */
-    public Healthprofile getHealthprofile() {
-        return healthprofile;
-    }
-
-    /**
-     * @param healthprofile the healthprofile to set
-     */
-    public void setHealthprofile(Healthprofile healthprofile) {
-        this.healthprofile = healthprofile;
-    }
-
-
 }

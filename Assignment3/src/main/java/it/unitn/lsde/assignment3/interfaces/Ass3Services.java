@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unitn.lsde.ass3.assignment3;
+package it.unitn.lsde.assignment3.interfaces;
 
 import it.unitn.lsde.ass3.assignment3.model.Healthprofile;
+import it.unitn.lsde.ass3.assignment3.model.History;
 import it.unitn.lsde.ass3.assignment3.model.Person;
-import java.util.List;
+import java.util.ArrayList;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -18,13 +19,13 @@ import javax.jws.soap.SOAPBinding;
  *
  * @author Lorenzo
  */
-@WebService
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
+@WebService(targetNamespace = "http://assignment3.ass3.lsde.unitn.it/")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface Ass3Services {
 
     @WebMethod(operationName = "readPerson")
     @WebResult(name = "person")
-    public Person readPerson(@WebParam(name = "personId") int id)throws Exception;
+    public Person readPerson(@WebParam(name = "personId") int id) throws Exception;
 
     @WebMethod(operationName = "createPerson")
     @WebResult(name = "personId")
@@ -41,4 +42,9 @@ public interface Ass3Services {
     @WebMethod(operationName = "updatePersonHealthProfile")
     @WebResult(name = "hpId")
     public int updatePersonHP(@WebParam(name = "personId") int id, @WebParam(name = "healthProfile") Healthprofile hp) throws Exception;
+
+    @WebMethod(operationName = "getHistory")
+    @WebResult(name = "history")
+    public History readHistory(@WebParam(name = "personId") int id) throws Exception;
+
 }

@@ -2,25 +2,30 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 10-dic-2013 18.21.32 by Hibernate Tools 3.6.0 -->
 <hibernate-mapping>
-  <class catalog="TEST" name="it.unitn.lsde.ass3.assignment3.model.Person" table="TABPERSON">
-    <id name="idperson" type="java.lang.Integer">
-      <column name="IDPERSON"/>
-      <generator class="identity"/>
-    </id>
-    <property name="name" type="string">
-      <column length="45" name="NAME" not-null="true"/>
-    </property>
-    <property name="surname" type="string">
-      <column length="45" name="SURNAME" not-null="true"/>
-    </property>
-    <property name="birthday" type="timestamp">
-      <column length="23" name="BIRTHDAY" not-null="true"/>
-    </property>
-    <set fetch="select" inverse="true" name="tabhealthprofiles" table="TABHEALTHPROFILE">
-      <key>
-        <column name="IDPERSON" not-null="true"/>
-      </key>
-      <one-to-many class="it.unitn.lsde.ass3.assignment3.model.Healthprofile"/>
-    </set>
-  </class>
+    <filter-def name="ultimadata">
+        
+        
+    </filter-def>
+    <class catalog="TEST" name="it.unitn.lsde.ass3.assignment3.model.Person" table="TABPERSON">
+        <id name="idperson" type="java.lang.Integer">
+            <column name="IDPERSON"/>
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string">
+            <column length="45" name="NAME" not-null="true"/>
+        </property>
+        <property name="surname" type="string">
+            <column length="45" name="SURNAME" not-null="true"/>
+        </property>
+        <property name="birthday" type="timestamp">
+            <column length="23" name="BIRTHDAY" not-null="true"/>
+        </property>
+        <set order-by="date" fetch="select" inverse="true" cascade="save-update" lazy="false" name="tabhealthprofiles" table="TABHEALTHPROFILE">
+            <key>
+                <column name="IDPERSON" not-null="true"/>
+            </key>
+            <one-to-many class="it.unitn.lsde.ass3.assignment3.model.Healthprofile"  />
+            <filter name="ultimadata" condition = " date= (select max(hp.date) from test.mydb.tabhealthprofile hp)" />
+        </set>
+    </class>
 </hibernate-mapping>

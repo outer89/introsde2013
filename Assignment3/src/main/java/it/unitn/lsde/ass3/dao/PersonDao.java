@@ -10,10 +10,6 @@ import it.unitn.lsde.ass3.assignment3.model.Person;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -27,27 +23,37 @@ public class PersonDao extends DaoBase {
         Person res = null;
         try {
             Session s = getSession();
+            s.enableFilter("ultimadata");
             Criteria c = s.createCriteria(Person.class);
             c.add(Restrictions.idEq(id));
-            DetachedCriteria subcriteria = DetachedCriteria.forClass(Healthprofile.class);
-            subcriteria.setProjection(Projections.max("date"));
-            c.add(Property.forName("date").eq(subcriteria));
-            
             res = (Person) c.uniqueResult();
+            s.close();
         } catch (Exception e) {
+            e.printStackTrace();
             res = null;
         } finally {
             return res;
         }
     }
+
     /**
-     * 
+     *
      * @param p peson to be updated
      * @return id of the person updated or -1 in case of problems
      */
     public Integer updatePerson(Person p) {
         Session s = getSession();
         Transaction tx = null;
+        //serve per non fare sgorillare l'update, poiche manca l'id della person
+        if (p.getTabhealthprofiles() != null) {
+            if (p.getTabhealthprofiles().size() == 1) {
+                Healthprofile hp = (Healthprofile) p.getTabhealthprofiles().toArray()[0];
+                hp.setTabperson(p);
+                p.getTabhealthprofiles().clear();
+                p.getTabhealthprofiles().add(hp);
+
+            }
+        }
         try {
             tx = s.beginTransaction();
             s.update(p);
@@ -55,8 +61,11 @@ public class PersonDao extends DaoBase {
             tx.commit();
             return p.getIdperson();
         } catch (Exception e) {
+            e.printStackTrace();
             tx.rollback();
             return -1;
+        } finally {
+            s.close();
         }
     }
 
@@ -82,6 +91,8 @@ public class PersonDao extends DaoBase {
         } catch (Exception e) {
             tx.rollback();
             return -2;
+        } finally {
+            s.close();
         }
     }
 

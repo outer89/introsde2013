@@ -83,9 +83,6 @@ public class Healthprofile  implements java.io.Serializable {
         this.calories = calories;
     }
 
-
-
-
 }
 
 

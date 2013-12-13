@@ -7,7 +7,7 @@
       <column name="IDTABHEALTHPROFILE"/>
       <generator class="identity"/>
     </id>
-    <many-to-one class="it.unitn.lsde.ass3.assignment3.model.Person" fetch="join" name="tabperson">
+    <many-to-one class="it.unitn.lsde.ass3.assignment3.model.Person" fetch="select" name="tabperson">
       <column name="IDPERSON" not-null="true"/>
     </many-to-one>
     <property name="date" type="timestamp">

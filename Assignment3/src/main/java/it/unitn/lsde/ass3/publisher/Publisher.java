@@ -21,7 +21,7 @@ public class Publisher {
             String localhost = //InetAddress.getLocalHost().getHostAddress();
             InetAddress.getLoopbackAddress().getHostAddress();
             System.out.println(InetAddress.getLocalHost().getHostAddress());
-            String port = "5912";
+            String port = "5914";
             String url = "http://" + localhost + ":" + port + "/";
             System.out.println(url);
             Endpoint e = Endpoint.publish(url + "ws/soap", new ServiceImpl() );
