@@ -20,6 +20,39 @@ import org.hibernate.criterion.Restrictions;
  */
 public class HpDao extends DaoBase{
     
+    /**
+     * 
+     * @param id
+     * @param hp
+     * @return id of hp or -1 in case of error, -2 if person does not exist
+     */
+    public int updateHp(int id, Healthprofile hp){
+        Session s = getSession();
+        Transaction tx = null;
+        try {
+            tx= s.beginTransaction();
+            Person p = new PersonDao().getPersonNofilter(id);
+            if(p == null){
+                return -2;
+            }
+            hp.setTabperson(p);
+            if((s.createCriteria(Healthprofile.class).add(Restrictions.idEq(hp.getIdtabhealthprofile())).uniqueResult()==null))
+                hp.setIdtabhealthprofile(null);
+            s.saveOrUpdate(hp);
+            s.flush();
+            tx.commit();
+            return hp.getIdtabhealthprofile();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tx.rollback();
+            return -1;
+        }
+        finally{
+            s.close();
+        }
+    
+    }
+    
     public List getHistory(int idPerson){
         Session s = getSession();
         Transaction tx = null;

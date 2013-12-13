@@ -8,7 +8,6 @@ package it.unitn.lsde.assignment3.interfaces;
 import it.unitn.lsde.ass3.assignment3.model.Healthprofile;
 import it.unitn.lsde.ass3.assignment3.model.History;
 import it.unitn.lsde.ass3.assignment3.model.Person;
-import java.util.ArrayList;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -40,7 +39,7 @@ public interface Ass3Services {
     public int deletePerson(@WebParam(name = "personId") int id) throws Exception;
 
     @WebMethod(operationName = "updatePersonHealthProfile")
-    @WebResult(name = "hpId")
+    @WebResult(name = "hpId")              
     public int updatePersonHP(@WebParam(name = "personId") int id, @WebParam(name = "healthProfile") Healthprofile hp) throws Exception;
 
     @WebMethod(operationName = "getHistory")

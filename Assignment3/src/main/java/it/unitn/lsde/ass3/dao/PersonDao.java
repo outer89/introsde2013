@@ -19,7 +19,6 @@ import org.hibernate.criterion.Restrictions;
 public class PersonDao extends DaoBase {
 
     public Person getPerson(int id) {
-        System.out.println("id: " + id);
         Person res = null;
         try {
             Session s = getSession();
@@ -107,18 +106,43 @@ public class PersonDao extends DaoBase {
         Transaction t = null;
         try {
             t = s.beginTransaction();
-            //scremo p, gli tolgo l'id
-            p.setIdperson(null);
+            if (p.getTabhealthprofiles() != null) {
+                if (p.getTabhealthprofiles().size() == 1) {
+                    Healthprofile hp = (Healthprofile) p.getTabhealthprofiles().toArray()[0];
+                    hp.setTabperson(p);
+                    p.getTabhealthprofiles().clear();
+                    p.getTabhealthprofiles().add(hp);
+
+                }
+            }
             s.save(p);
             s.flush();
             t.commit();
             System.out.println(p.getIdperson());
             return p.getIdperson();
         } catch (Exception e) {
+            e.printStackTrace();
             t.rollback();
             return -1;
         } finally {
             s.close();
         }
+    }
+
+    protected Person getPersonNofilter(int id) {
+        Person res = null;
+        try {
+            Session s = getSession();
+            Criteria c = s.createCriteria(Person.class);
+            c.add(Restrictions.idEq(id));
+            res = (Person) c.uniqueResult();
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            res = null;
+        } finally {
+            return res;
+        }
+
     }
 }

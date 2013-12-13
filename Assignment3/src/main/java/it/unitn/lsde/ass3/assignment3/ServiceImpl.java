@@ -48,7 +48,8 @@ public class ServiceImpl implements Ass3Services {
     }
 
     public int updatePersonHP(int id, Healthprofile hp) {
-        return 0;
+        HpDao hpd = new HpDao();
+        return hpd.updateHp(id, hp);
     }
 
     public History readHistory(int id) throws Exception {
